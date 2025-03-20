@@ -1,0 +1,9 @@
+# data/pre computed things
+*.zip
+models/
+
+# compiled files
+__pycache__/
+
+# vscode stuff
+.vscode/

@@ -1,6 +1,6 @@
 import requests                  # sends the HTTP requests
 from bs4 import BeautifulSoup    # is what can parse HTML
-from typing import List,Dict          # just needed for signatures/type hinting            
+from typing import List,Dict     # just needed for signatures/type hinting            
 
 
 
@@ -66,7 +66,7 @@ def clean_wiki_link(link : str) -> str:
             str: The relevant title of the link
     """
         
-    partial = link[30:].replace("_"," ")
+    partial = link[30:]
     if "#" in partial:
         partial = partial[partial.index("#")+1:]
     return partial
@@ -91,11 +91,4 @@ def construct_dictionary(links : List[str]) -> Dict[str,str]:
     for link in links:
         link_term_map.update({clean_wiki_link(link):link})
     return link_term_map
-
-
-url  = "https://en.wikipedia.org/wiki/Philosophy"
-wiki_links = get_wikipedia_links(url)
-
-for term, link in construct_dictionary(wiki_links).items():
-    print(f"{term}  {link}")
 
