@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup    # is what can parse HTML
 from typing import List,Dict     # just needed for signatures/type hinting            
 
 
-
 def get_wikipedia_links(url : str) -> List[str]:
     """
         Given a link to a wikipedia page, will construct a list of urls pointing to other wikipedai pages found
@@ -19,42 +18,46 @@ def get_wikipedia_links(url : str) -> List[str]:
             List[str]: a list of urls of the wikipedia pages hyperlinked within the text of the original wikipedia page
     """
     
-    response = requests.get(url)
-    
-    if response.status_code != 200:
-        raise ConnectionError("Failed to retrieve the webpage!")
-
+    # try to establish connection
+    try:
+        response = requests.get(url)
+    except Exception as e:
+        print("request failed with exception:", e)
+        raise ConnectionError(f"Could not retrieve page \n error code : ")
+        
     soup = BeautifulSoup(response.content, "html.parser")
-    content_divs = soup.find_all("div",class_="mw-parser-output")     # only looking at the relevant text tag
-    reference_divs = soup.find_all("div", class_="reflist")           # the references section
-    further_reading_divs = soup.find_all("div", class_="refbegin")    # the further reading section
 
-    # combine references and further reading to create a list of sections to exclude
-    exclusion_list = reference_divs+further_reading_divs
+    # only look at divs with the correct tag 
+    content_divs = soup.find_all("div",class_="mw-parser-output") 
+    if not content_divs:
+        return []
 
-    # purge the document from the undesired sections
-    for tag in exclusion_list:
-        tag.decompose()
-
-    # collect every tag with 
-    page_links = []
+    # only look at the paragraphs and tables in the divs (ignores bibliography and other sections)
+    paragraphs = []
+    tables = []
     for div in content_divs:
-        page_links.extend(div.find_all('a')) # all of the links in the main text
-
-    # verify the hyperlinks and collect them
-    links = []
-    for link in page_links:
-        href = link.get("href")
-        # Check if the link is a wikipedia article
-        if href and href.startswith("/wiki/") and ":" not in href:
-            full_url = "https://en.wikipedia.org" + href
-            if full_url not in links:
-                links.append(full_url)
-
-    return links
+        paragraphs.extend(div.find_all('p'))
+        tables.extend(div.find_all('table'))
 
 
-def clean_wiki_link(link : str) -> str:
+    # collect links
+    links = set()
+    for p in paragraphs + tables:
+        # remove in text citations
+        for citation in p.find_all(['sup','span'], class_=['reference', 'mw-cite-backlink']):
+            citation.decompose()
+
+        # only admit links that link to full articles not sections
+        for link_tag in p.find_all('a',href=True):
+            link = link_tag['href']
+            if(link.startswith('/wiki/') and 
+               ":" not in link and
+               "#" not in link):
+                links.add('https://en.wikipedia.org' + link)
+
+    return list(links) 
+
+def clean_wiki_link(url : str) -> str:
     """
         Given a link to a wikipedia page will extract the relevant title of the page, if the link points 
         to a specific section of the page will use the title of that section. 
@@ -66,16 +69,16 @@ def clean_wiki_link(link : str) -> str:
             str: The relevant title of the link
     """
         
-    partial = link[30:]
+    partial = url[30:]
     if "#" in partial:
         partial = partial[partial.index("#")+1:]
     return partial
 
-def clean_up_links(links : List[str]) -> List[str]:
-    return map(clean_wiki_link,links)
+def clean_up_links(urls : List[str]) -> List[str]:
+    return map(clean_wiki_link,urls)
 
 
-def construct_dictionary(links : List[str]) -> Dict[str,str]:
+def construct_dictionary(urls : List[str]) -> Dict[str,str]:
     """
         Given a list wikipedia urls will create a dictionary mapping between the the relevant title of the page,
         and the actual url
@@ -88,7 +91,7 @@ def construct_dictionary(links : List[str]) -> Dict[str,str]:
     """
 
     link_term_map  = {}
-    for link in links:
+    for link in urls:
         link_term_map.update({clean_wiki_link(link):link})
     return link_term_map
 
