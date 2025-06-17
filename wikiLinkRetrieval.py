@@ -1,6 +1,7 @@
 import requests                  # sends the HTTP requests
 from bs4 import BeautifulSoup    # is what can parse HTML
-from typing import List,Dict     # just needed for signatures/type hinting            
+from typing import List,Dict     # just needed for signatures/type hinting        
+from urllib.parse import unquote # needed for correctly formatting articles names    
 
 
 def get_wikipedia_links(url : str) -> List[str]:
@@ -69,10 +70,13 @@ def clean_wiki_link(url : str) -> str:
             str: The relevant title of the link
     """
         
-    partial = url[30:]
-    if "#" in partial:
-        partial = partial[partial.index("#")+1:]
-    return partial
+    partial = url.replace('https://en.wikipedia.org/wiki/',"")
+    partial = unquote(partial)
+    return partial.replace("_", " ")
+
+def format_path(path : List[str]) -> str:
+    return " → ".join([clean_wiki_link(url) for url in path ])
+    
 
 def clean_up_links(urls : List[str]) -> List[str]:
     return map(clean_wiki_link,urls)

@@ -36,7 +36,17 @@ def bfs(start : str,target : str) -> List[str]:
     
 
 def phrase_to_vec(phrase: str, model: KeyedVectors, ) -> np.ndarray:
+    """Given a string and a KeyedVectors model will attempt to find the phrase vector in the model
+    and if it can't will average the available vectors from the words that make up the phrase. Will return
+    the zero vector if none of the words inside of the phrase exist in the model and thus no average can be made.
 
+    Args:
+        phrase (str): the phrase being searched
+        model (KeyedVectors): the vector embedding model
+
+    Returns:
+        np.ndarray: the final phrase vector being output
+    """
     if phrase in  model:
         return model.get_vector(phrase)
 
@@ -90,7 +100,6 @@ def vecSimSearch(start : str,target : str, model : KeyedVectors) -> List[str]:
             continue
 
         seen.add(current)
-        print(current)
 
         if current == target:
             return path + [current]
@@ -147,7 +156,6 @@ def vecSimSearch2(start : str,target : str, model : KeyedVectors) -> List[str]:
     while current != None:
         path.append(current)
         seen.add(current)
-        print(current)
 
         if current == target:
             return path + [current]
@@ -168,5 +176,4 @@ def vecSimSearch2(start : str,target : str, model : KeyedVectors) -> List[str]:
                     current = node
 
     print("Dead end reached!")
-    print(path)
-    return None
+    return path
