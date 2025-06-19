@@ -1,3 +1,12 @@
+# data/pre computed things
+*.zip
+models/
+.pickle
+
+# related to visualization & pyvis
+.html
+lib/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -178,7 +187,7 @@ cython_debug/
 #  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
 #  and can be added to the global gitignore or merged into this file. However, if you prefer, 
 #  you could uncomment the following to ignore the enitre vscode folder
-# .vscode/
+.vscode/
 
 # Ruff stuff:
 .ruff_cache/
@@ -192,12 +201,5 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
-# data/pre computed things
-*.zip
-models/
 
-# compiled files
-__pycache__/
 
-# vscode stuff
-.vscode/
