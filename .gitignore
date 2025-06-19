@@ -2,6 +2,7 @@
 *.zip
 models/
 .pickle
+.html
 
 # related to visualization & pyvis
 .html
