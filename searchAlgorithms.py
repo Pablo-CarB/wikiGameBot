@@ -25,7 +25,7 @@ def bfs(start : str,target : str) -> List[str]:
         if current == target:
             return path + [current]
 
-        neighbours = wiki.get_wikipedia_links(current)
+        neighbours = wiki.get_adj_wiki(current)
 
         if target in neighbours:
             return path + [target]
@@ -105,7 +105,7 @@ def vecSimSearch(start : str,target : str, model : KeyedVectors) -> List[str]:
         if current == target:
             return path + [current]
 
-        neighbours = wiki.get_wikipedia_links(current)
+        neighbours = wiki.get_adj_wiki(current)
 
         if target in neighbours:
             return path + [target]
@@ -161,7 +161,7 @@ def vecSimSearch2(start : str,target : str, model : KeyedVectors) -> List[str]:
         if current == target:
             return path + [current]
 
-        neighbours = wiki.get_wikipedia_links(current)
+        neighbours = wiki.get_adj_wiki(current)
 
         if target in neighbours:
             return path + [target]
