@@ -4,6 +4,7 @@ from gensim.models import KeyedVectors
 import numpy as np
 import heapq
 
+# use this to find the optimal path, does not actually play the game
 def bfs(start : str,target : str) -> List[str]:
     """An implementation of BFS that plays the wikiGame, given the url for the start and end pages 
 
@@ -24,7 +25,7 @@ def bfs(start : str,target : str) -> List[str]:
         if current == target:
             return path + [current]
 
-        neighbours = wiki.get_wikipedia_links(current)
+        neighbours = wiki.get_adj_wiki(current)
 
         if target in neighbours:
             return path + [target]
@@ -104,7 +105,7 @@ def vecSimSearch(start : str,target : str, model : KeyedVectors) -> List[str]:
         if current == target:
             return path + [current]
 
-        neighbours = wiki.get_wikipedia_links(current)
+        neighbours = wiki.get_adj_wiki(current)
 
         if target in neighbours:
             return path + [target]
@@ -124,6 +125,7 @@ def vecSimSearch(start : str,target : str, model : KeyedVectors) -> List[str]:
                 heapq.heappush(queue,(-cosine_sim, node ,path + [current]))
     return None
 
+# first implementation that actually plays the game
 def vecSimSearch2(start : str,target : str, model : KeyedVectors) -> List[str]:
     """A greedy approach to the wikiGame which uses article name vector embeddings. The algorithm
     works by always traversing to the adjacent article whose name vector has the highest cosine similarity to
@@ -137,9 +139,8 @@ def vecSimSearch2(start : str,target : str, model : KeyedVectors) -> List[str]:
     Returns:
         List[str]: the path from the start page to the end page
     """
-    start_vec = phrase_to_vec(wiki.clean_wiki_link(start),model)
     target_vec = phrase_to_vec(wiki.clean_wiki_link(target),model)
-    target_norm = target_norm = np.linalg.norm(target_vec)
+    target_norm = np.linalg.norm(target_vec)
 
     def target_cosine_sim(node_vec):
         node_norm = np.linalg.norm(node_vec)
@@ -160,7 +161,7 @@ def vecSimSearch2(start : str,target : str, model : KeyedVectors) -> List[str]:
         if current == target:
             return path + [current]
 
-        neighbours = wiki.get_wikipedia_links(current)
+        neighbours = wiki.get_adj_wiki(current)
 
         if target in neighbours:
             return path + [target]
