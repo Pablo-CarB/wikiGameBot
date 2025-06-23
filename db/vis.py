@@ -20,19 +20,19 @@ def create_from_pickle2(G):
 
 def create_from_pickle(G):
     
-    # Create mapping from tuple nodes to string IDs
+    # create mapping from tuple nodes to string IDs
     node_mapping = {}
     for i, node in enumerate(G.nodes()):
         node_mapping[node] = str(i)
     
-    # Convert the graph
+    # convert the graph
     G_converted = nx.relabel_nodes(G, node_mapping)
     
-    # Add the cleaned titles as labels for better visualization
+    # add the cleaned titles as labels for better visualization
     for old_node, new_node in node_mapping.items():
-        cleaned_title = old_node[0]  # First element of tuple is cleaned title
+        cleaned_title = old_node[0]  # first element of tuple is cleaned title
         G_converted.nodes[new_node]['label'] = cleaned_title
-        G_converted.nodes[new_node]['title'] = old_node[1]  # URL for hover info
+        G_converted.nodes[new_node]['title'] = old_node[1]  # url for hover info
     
     layout = nx.spring_layout(G_converted)
     print("Layout created")
@@ -48,9 +48,6 @@ def create_from_pickle(G):
     G2.toggle_physics(False)
     G2.show_buttons(filter_=['physics'])
     G2.show("wikimap.html", notebook=False)
-
-# Usage:
-# create_from_networkx_graph('wikiGraph2.pickle')
 
 F = nx.Graph()
 F.add_edges_from([(1,2),(2,3),(3,4),(4,5),(5,6),(6,1)])
