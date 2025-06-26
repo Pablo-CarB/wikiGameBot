@@ -49,6 +49,7 @@ def create_from_pickle(G):
     G2.show_buttons(filter_=['physics'])
     G2.show("wikimap.html", notebook=False)
 
-F = nx.Graph()
-F.add_edges_from([(1,2),(2,3),(3,4),(4,5),(5,6),(6,1)])
-create_from_pickle2(F)
+
+with open("wikiGraph2.pickle","rb") as read:
+    G = pickle.load(read)
+    create_from_pickle2(G)

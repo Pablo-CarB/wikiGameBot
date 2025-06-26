@@ -1,6 +1,7 @@
 # data/pre computed things
 *.zip
 models/
+graphs/
 .pickle
 .html
 
