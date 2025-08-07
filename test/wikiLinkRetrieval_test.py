@@ -3,7 +3,6 @@ import sys
 from typing import Dict,Tuple,Set
 sys.path.append("./src/")
 
-# Import your existing modules
 from wikiLinkRetrieval import (
     extract_links, clean_wiki_link, format_path
 )
@@ -51,14 +50,16 @@ class TestExtractLinks:
 
         }
 
+        # answer_map structure
+        # (name_of_article : (content_of_article ,{adjacent_article_links}))
         answer_map = {}
-        for path_answer_pair in [("test/Sipsi.html",sipsi_answer),
-            ("test/Rusty breasted nunlet.html",rusty_breasted_nunlet_answer),
-            ("test/Cornet.html", cornet_answer)]:
+        for path_answer_pair in [("test/fixtures/Sipsi.html",sipsi_answer),
+            ("test/fixtures/Rusty breasted nunlet.html",rusty_breasted_nunlet_answer),
+            ("test/fixtures/Cornet.html", cornet_answer)]:
             path = path_answer_pair[0]
             with open(path,'r') as file:
                 content = file.read().encode('utf-8')
-                answer_map.update({path.replace("test/","").replace(".html","") : (content,path_answer_pair[1])})
+                answer_map.update({path.replace("test/fixtures/","").replace(".html","") : (content,path_answer_pair[1])})
         return answer_map
 
     def test_sipsi(self,load_htmls):

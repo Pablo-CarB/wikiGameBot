@@ -36,12 +36,12 @@ def extract_links(content: bytes) -> Set[str]:
         raise RuntimeError("unable to find main content section")
 
     end_section_patterns = [
-        r'<h2[^>]*id="See_also"[^>]*>',           # See also
-        r'<h2[^>]*id="References"[^>]*>',         # References  
-        r'<h2[^>]*id="Further_reading"[^>]*>',    # Further reading
-        r'<h2[^>]*id="External_links"[^>]*>',     # External links
-        r'<h2[^>]*id="Notes"[^>]*>',              # Notes
-        r'<h2[^>]*id="Bibliography"[^>]*>',       # Bibliography
+        r'<h2[^>]*id="See_also"[^>]*>',             # See also
+        r'<h2[^>]*id="References"[^>]*>',           # References  
+        r'<h2[^>]*id="Further_reading"[^>]*>',      # Further reading
+        r'<h2[^>]*id="External_links"[^>]*>',       # External links
+        r'<h2[^>]*id="Notes"[^>]*>',                # Notes
+        r'<h2[^>]*id="Bibliography"[^>]*>',         # Bibliography
         r'<div[^>]*class="[^"]*reflist[^"]*"[^>]*>' # References div (fallback)
     ]
 
@@ -138,6 +138,17 @@ async def async_get_adj_wikis_helper(urls : Set[str],batch_size : int = 20) -> D
             return {k: v for r in results if isinstance(r, dict) for k, v in r.items()}
     
 def get_adj_wiki_lists(urls : Set[str],batch_size : int = 20) -> Dict[str,Set[str]]:
+    """Given a set of urls to explore will return a dictionary where the keys are articles in the input set
+    and the values are the sets of adjacent articles
+
+    Args:
+        urls (Set[str]): a set of urls to explore
+        batch_size (int, optional): the batch size used for requesting wikipedia's servers. Defaults to 20.
+
+    Returns:
+        Dict[str,Set[str]]: the dictionary containing the articles in the input set 
+                            as keys and the set of adjacent articles as values
+    """
     return asyncio.run(async_get_adj_wikis_helper(urls,batch_size))
 
 ############################## Helper Functions/Formatting Functions  ##############################
@@ -163,9 +174,3 @@ def clean_wiki_links(urls : List[str]) -> List[str]:
 
 def format_path(path : List[str]) -> str:
     return " → ".join([clean_wiki_link(url) for url in path ])
-
-# most_referenced = "https://en.wikipedia.org/wiki/Wikipedia:Most-referenced_articles"
-# countries =  "https://simple.wikipedia.org/wiki/List_of_countries"
-# disciplines = "https://en.wikipedia.org/wiki/Outline_of_academic_disciplines"
-
-# print(get_adj_wiki_lists(set({most_referenced,countries,disciplines})))
