@@ -11,18 +11,20 @@ The objective of the [Wikipedia Game](https://en.wikipedia.org/wiki/Wikipedia:Wi
 
 The goal of this project is to develop an agent that can genuinely play the game and efficiently find sufficiently good paths. 
 
-## Approach
+## Why Reinforcement Learning?
 There are two things that the model needs to understand/learn to effectively play the game
 1. the semantic relationships between words (specifically article titles) to understand if it is near or approaching the target article
 2. the fact that it is traversing a graph, and the strategies related to that namely that
    - it isn't always the best strategy to go to the article with the most similar name to the target (can get lost down long paths)
    - sometimes it makes sense to choose a more ambiguous article because it is likely to be a "hub" article that has a lot of connections to other articles
 
-Most of the classic path finding algorithms like A* and BFS are ruled out purely because they rely on being able to backtrack which in principle isn't possible because hyperlinks are one way connections (it also could be pretty inneficient). Another issue especially with A* is the lack of an admissable heurisitc, there simply isn't a realistic way of providing a useful heuristic on the Wikipedia graph.
+Most of the classic path finding algorithms like A* and BFS are ruled out purely because they rely on being able to backtrack which in principle isn't possible because hyperlinks are one way connections (it also could be pretty inefficient). Another issue especially with A* is the lack of an admissible heurisitc, there simply isn't a realistic way of providing a useful heuristic on the Wikipedia graph.
 
-One possibility is just using a greedy based approach that always chooses the most semantically similar aritcle. This is possible to implement and can work but falls flat when understanding graph traversal becomes important. Greedy based approaches often get lost and miss out on obvious strategic choices because of a slighltyl more similar but much more obscure article.
+One possibility is just using a greedy based approach that always chooses the most semantically similar article. This is possible to implement and can work but falls flat when understanding graph traversal becomes important. Greedy based approaches often get lost and miss out on obvious strategic choices because of a slightly more similar but much more obscure article.
 
 That leaves us with reinforcement learning as a possible approach. If we train a model on "useful" subgraphs of the Wikipedia graph centered on hub articles that are likely to come up then over succe 
+
+## Approach
 
 ## Results
 
